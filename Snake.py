@@ -1,89 +1,134 @@
 from curses import wrapper
 import time
 from collections import namedtuple
-'''
-def main(stdscr):
-    stdscr.clear()
 
 
-    y = 2
-    x = 10
-    stdscr.addstr(y, x, 'Hello world!')
-    stdscr.refresh()
-
-    for i in range(10):
-        got = stdscr.getkey()
-
-        print(got)
-        '''
-
-
-if __name__ == '__main__':
-    wrapper(main)
+#if __name__ == '__main__':
+ #   wrapper(main)
     # Wrapper does the setup and then calls main
     # after main is done, it puts back everything as it was
 
+Pos = namedtuple('Pos', ['x', 'y'])
 
+class IllegalMove(Exception):
+    pass
 class GameLost(Exception):
     pass
 
 class Snake:
 
-    def __init__(self, posTup, posSet, LENGTH, WIDTH, cdir):
-        self.posTup = namedtuple('Pos', ['x', 'y'])
-        self.posSet = [Pos(x = 3, y = 3)]
-        self.cdir = 'e'
-        LENGTH = 12
-        WIDTH = 8
+    def __init__(self, LENGTH, WIDTH):
+        self.posArr = [ Pos(x = 3, y = 3) ]
+        self.cdir   = 'e'
+        self.LENGTH = LENGTH
+        self.WIDTH  = WIDTH
+        
+        self.grow_at = []
+        
 
     def turn_north(self):
-        self.posSet.insert(0, Pos(x, y++)
-        del self.posSet[len(posSet-1)]
-        cdir = 'n'
-        return cdir
+        if self.cdir == 's':
+            self.cdir = 's'
+            raise IllegalMove("Can't move from south to north")
+        else:
+            self.cdir = 'n'
         
     def turn_south(self):
-        self.posSet.insert(0, Pos(x, y--)
-        del self.posSet[len(posSet-1)]
-        cdir = 's'
-        return cdir
+        if self.cdir == 'n':
+            self.cdir == 'n'
+            raise IllegalMove("Can't move from north to south")
+        else:
+            cdir = 's'
         
     def turn_east(self):
-        self.posSet.insert(0, Pos(x++, y)
-        del self.posSet[len(posSet-1)]
-        cdir = 'e'
-        return cdir
+        if self.cdir == 'w':
+            self.cdir == 'w'
+            raise IllegalMove("Can't move from north to south")
+        else:
+            cdir = 'e'
                            
     def turn_west(self):
-        self.posSet.insert(0, Pos(x--, y)
-        del self.posSet[len(posSet-1)]
-        cdir = 'w'
-        return cdir
+        if self.cdir == 'e':
+            self.cdir == 'e'
+            raise IllegalMove("Can't move from north to south")
+        else:
+            cdir = 'w'
 
     def grow(self):
-        growx = self.posSet[0, Pos(x)]
-        growy = self.posSet[0, Pos(y)]
-        if(self.posSet[len(posSet-1), Pos(x = growx + 1, y)] or self.posSet[len(posSet-1), Pos(x, y = growy + 1)])
-            self.posSet.append(Pos[x = growx, y = growy])
+        self.grow_at.append[self.posArr[0]]
     
 
-    def move_forward(self, cdir):
-        if(self.cdir == 'e')
-            return self.turn_east()
-        if(self.cdir == 'w')
-            return self.turn_west()
-        if(self.cdir == 'n')
-            return self.turn_north()
-        if(self.cdir == 's')
-            return self.turn_south()
-
-    def spawnApple(self):
-        applex = randint(0,12)
-        appley = randint(0,8)
-        if(posSet[0] == Pos(applex, appley))
-            return true
-        else
-            return false
+    def move_forward(self):
+        # Check for two things
+        #   1. Did the snake hit itself
+        #   2. Did the snake it one of the borders?
         
-                           
-        raise GameLost('Looser!!')
+        # Use array.index
+        head = self.posArr[0]
+        if self.cdir == 'n':
+            newPos = Pos(x = head.x, y = head.y + 1)
+        elif self.cdir == 's':
+            newPos = Pos(x = head.x, y = head.y - 1)
+        elif self.cdir == 'e':
+            newPos = Pos(x = head.x + 1, y = head.y)
+        elif self.cdir == 'w':
+            newPos = Pos(x = head.x - 1, y = head.y)
+        
+        try:
+            idx = self.posArr.index(newPos)
+            
+            raise GameLost('The snake hit itself')
+        except ValueError:
+            pass
+        
+        if newPos.x <= -1 or newPos.x >= self.WIDTH:
+            raise GameLost('You hit the border')
+        
+        if newPos.y <= -1 or newPos.y >= self.LENGTH:
+            raise GameLost('You hit the border')
+
+        
+        # INSERT newPos
+        self.posArr.insert(0, newPos)
+        
+        if not (self.grow_at is None or self.posArr[-1] != self.grow_at):
+            pop.self.grow_at[-1]
+        else:
+            self.posArr.pop()
+
+def randomApple(applex, appley):
+    applex = randint(0, WIDTH)
+    appley = randint(0, LENGTH)
+    
+LENGTH = 8
+WIDTH = 12
+applex = 8
+appley = 8
+
+snake = Snake(LENGTH, WIDTH)
+
+while(True):
+    while(snake.posArr[0] != Pos(x = applex, y = appley)):
+        try:
+          snake.move_forward()
+        except ValueError or GameLost():
+          break
+    if(KEY_UP):
+          snake.turn_north()
+    elif(KEY_DOWN):
+          snake.turn_south()
+    elif(KEY_LEFT):
+          snake.turn_west()
+    elif(KEY_RIGHT):
+          snake.turn_east()
+    if(snake.posArr[0] == Pos(x = applex, y = appley)):
+          snake.grow()
+          randomApple(applex, appley)
+    
+
+
+
+
+        
+
+  
