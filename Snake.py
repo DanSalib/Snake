@@ -19,30 +19,30 @@ class Snake:
         self.WIDTH  = WIDTH
         
         self.grow_at = []
-        
-    def turn_south(self):
-        if self.cdir == 'n':
-            raise IllegalMove("Can't move from south to north")
-        else:
-            cdir = 's'
 
     def turn_north(self):
         if self.cdir == 's':
             raise IllegalMove("Can't move from south to north")
         else:
-            self.cdir = 'n'        
+            self.cdir = 'n'
+
+    def turn_south(self):
+        if self.cdir == 'n':
+            raise IllegalMove("Can't move from south to north")
+        else:
+            self.cdir = 's'         
         
     def turn_east(self):
         if self.cdir == 'w':
             raise IllegalMove("Can't move from west to east")
         else:
-            cdir = 'e'
+            self.cdir = 'e'
                            
     def turn_west(self):
         if self.cdir == 'e':
             raise IllegalMove("Can't move from east to west")
         else:
-            cdir = 'w'
+            self.cdir = 'w'
 
     def grow(self):
         self.grow_at.append[self.posArr[0]]
@@ -95,23 +95,26 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
     
         # USE
         for pos in self.posArr:
-            stdscr.addstr(pos.y, pos.x, '~')
+            stdscr.addstr(pos.y, pos.x, '*')
 
 def randomApple(applex, appley):
     applex = randint(0, WIDTH)
     appley = randint(0, LENGTH)
+    std.scr.addstr(appley, apple.x, '#')
 
 def main(stdscr):   
     LENGTH = 8
     WIDTH = 12
-    applex = 8
-    appley = 8
+    applex = 0
+    appley = 0
+
+    #randomApple(applex, appley)
+
+    if(snake.posArr[0] == Pos(x = applex, y = appley)):
+              snake.grow()
+              randomApple(applex, appley)
 
     snake = Snake(LENGTH, WIDTH)
-    #snake.turn_south()
-    #snake.turn_north()
-    #snake.turn_east()
-    #snake.turn_west()
 
     while True:
         while True: #(stdscr.getkey() == or snake.posArr[0] != Pos(x=applex, y=appley)):
@@ -124,6 +127,7 @@ def main(stdscr):
               time.sleep(0.5)
             except ValueError or GameLost():
               break
+            '''
         if(stdscr.getkey() == KEY_UP):
               snake.turn_north()
         elif(stdscr.getkey() == KEY_DOWN):
@@ -135,6 +139,7 @@ def main(stdscr):
         if(snake.posArr[0] == Pos(x = applex, y = appley)):
               snake.grow()
               randomApple(applex, appley)
+              '''
         
 
 if __name__ == '__main__':
