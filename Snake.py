@@ -1,5 +1,7 @@
 from curses import wrapper
 import time
+from random import randrange
+
 from collections import namedtuple
 
 
@@ -45,7 +47,7 @@ class Snake:
             self.cdir = 'w'
 
     def grow(self):
-        self.grow_at.append[self.posArr[0]]
+        self.grow_at.append(self.posArr[0])
     
 
     def move_forward(self):
@@ -83,7 +85,7 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
 
         self.posArr.insert(0, newPos)
         
-        if len(self.grow_at) > 0 and self.posArr[0] ==  self.grow_at[0]:
+        if len(self.grow_at) > 0 and self.posArr[-1] ==  self.grow_at[0]:
             self.grow_at.pop(0)
         else:
             self.posArr.pop()
@@ -97,34 +99,45 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
         for pos in self.posArr:
             stdscr.addstr(pos.y, pos.x, '*')
 
-def randomApple(applex, appley):
-    applex = randint(0, WIDTH)
-    appley = randint(0, LENGTH)
-    std.scr.addstr(appley, apple.x, '#')
+def randomApple(applex, appley, LENGTH, WIDTH):
+    applex = randrange(WIDTH)
+    appley = randrange(LENGTH)
+
+def printApple(stdscr, applex, appley):
+    stdscr.addstr(appley, applex, '#')
+    
 
 def main(stdscr):   
-    LENGTH = 8
+    LENGTH = 12
     WIDTH = 12
-    applex = 0
-    appley = 0
+    applex = 3
+    appley = 6
+    app = True
 
-    #randomApple(applex, appley)
-
-    if(snake.posArr[0] == Pos(x = applex, y = appley)):
-              snake.grow()
-              randomApple(applex, appley)
+    
 
     snake = Snake(LENGTH, WIDTH)
+    snake.turn_south()
 
+    
     while True:
-        while True: #(stdscr.getkey() == or snake.posArr[0] != Pos(x=applex, y=appley)):
+        while True: #(snake.posArr[0] != Pos(x=applex, y=appley)):
             try:
               snake.move_forward()
+              if(app == True):
+                  randomApple(applex, appley, LENGTH, WIDTH)
               #print and delay
+              if(snake.posArr[0] == Pos(x = applex, y = appley)):
+                  snake.grow()
+                  randomApple(applex, appley, LENGTH, WIDTH)
               stdscr.clear()
+              if(app == True):
+                  randomApple(applex, appley, LENGTH, WIDTH)
+              printApple(stdscr, applex, appley)
               snake.draw(stdscr)
               stdscr.refresh()
               time.sleep(0.5)
+              app = False
             except ValueError or GameLost():
               break
             '''
@@ -136,11 +149,12 @@ def main(stdscr):
               snake.turn_west()
         elif(stdscr.getkey() == KEY_RIGHT):
               snake.turn_east()
+              
         if(snake.posArr[0] == Pos(x = applex, y = appley)):
               snake.grow()
-              randomApple(applex, appley)
-              '''
-        
+              randomApple(stdscr, applex, appley, LENGTH, WIDTH)
+             
+        '''
 
 if __name__ == '__main__':
    wrapper(main)
