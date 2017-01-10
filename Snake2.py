@@ -1,4 +1,4 @@
-from curses import wrapper
+from curses import wrapper, curs_set, newwin
 import time
 from random import randrange
 
@@ -77,10 +77,10 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
         except ValueError:
             pass
         
-        if newPos.x <= -1 or newPos.x >= self.WIDTH:
+        if newPos.x < 1 or newPos.x > self.WIDTH - 2:
             raise GameLost('You hit the border')
         
-        if newPos.y <= -1 or newPos.y >= self.LENGTH:
+        if newPos.y < 1 or newPos.y >= self.LENGTH - 2:
             raise GameLost('You hit the border')
 
         self.posArr.insert(0, newPos)
@@ -100,8 +100,8 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
             stdscr.addstr(pos.y, pos.x, '*')
 
     def randomApple(self, LENGTH, WIDTH):
-        applex = randrange(WIDTH)
-        appley = randrange(LENGTH)
+        applex = randrange(1, WIDTH-2)
+        appley = randrange(1, LENGTH-2)
         for pos in self.posArr:
             while(applex == pos.x and appley == pos.y):
                 applex = randrange(WIDTH)
@@ -120,60 +120,73 @@ def main(stdscr):
     app = True
 
     
-
+    LEGNTH, WIDTH =  stdscr.getmaxyx()
+    
     snake = Snake(LENGTH, WIDTH)
 
-    stdscr.nodelay(False)
+    stdscr.nodelay(True)
+    curs_set(0)
+    WON_MSG = 'You Won'
+    LOST_MSG = 'You Lost'
 
     start = time.time()
+    
+    snakeSpeed = 0.4
       
     while True:
-        while(time.time() - start <0.5):
-            key = stdscr.getkey()
-            if(key == 'KEY_UP'):
-              snake.turn_north()
-              break
-            elif(key == 'KEY_DOWN'):
-                snake.turn_south()
+        timeNow = time.time() 
+        if (timeNow - start) >= snakeSpeed:
+            try:
+                snake.move_forward()
+                if(app == True):
+                    applex, appley = snake.randomApple(LENGTH,WIDTH)
+                if(snake.posArr[0] == Pos(x = applex, y = appley)):
+                    snake.grow()
+                    applex, appley = snake.randomApple(LENGTH, WIDTH)
+                    snakeSpeed = snakeSpeed - 0.01
+                    if(snakeSpeed == 0):
+                        stdscr.clear()
+                        stdscr.addstr(LENGTH, (WIDTH - len(LOST_MSG))//2, WON_MSG)
+                        stdscr.refresh()
+                        time.sleep(3)
+                        break
+                stdscr.clear()
+                app = False
+                start = time.time()
+                
+            except GameLost:
+                stdscr.clear()
+                stdscr.addstr(LENGTH//2,(WIDTH - len(LOST_MSG))//2, LOST_MSG)
+                stdscr.refresh()
+                time.sleep(3)
                 break
-            elif(key == 'KEY_LEFT'):
-              snake.turn_west()
-              break
-            elif(key == 'KEY_RIGHT'):
-              snake.turn_east()
-              break
-        try:
-          snake.move_forward()
-          if(app == True):
-            applex, appley = snake.randomApple(LENGTH,WIDTH)
-          if(snake.posArr[0] == Pos(x = applex, y = appley)):
-            snake.grow()
-            applex, appley = snake.randomApple(LENGTH, WIDTH)
-          stdscr.clear()
-          if(app == True):
-              applex, appley = snake.randomApple(LENGTH, WIDTH)
-          snake.printApple(stdscr, applex, appley)
-          snake.draw(stdscr)
-          stdscr.refresh()
-          app = False
-          start = time.time()
-        except ValueError or GameLost():
-          break
-        '''
-    if(stdscr.getkey() == KEY_UP):
-          snake.turn_north()
-    elif(stdscr.getkey() == KEY_DOWN):
-          snake.turn_south()
-    elif(stdscr.getkey() == KEY_LEFT):
-          snake.turn_west()
-    elif(stdscr.getkey() == KEY_RIGHT):
-          snake.turn_east()
-          
-    if(snake.posArr[0] == Pos(x = applex, y = appley)):
-          snake.grow()
-          randomApple(stdscr, applex, appley, LENGTH, WIDTH)
-         
-    '''
+                
+            start = timeNow
+        else:
+            
+            try:
+                key = stdscr.getkey()
+                
+                if key == 'KEY_UP':
+                    snake.turn_north();
+                elif key == 'KEY_DOWN':
+                    snake.turn_south();
+                elif key == 'KEY_RIGHT':
+                    snake.turn_east();
+                elif key == 'KEY_LEFT':
+                    snake.turn_west();
+            
+            except Exception: # IllegalMove and no input
+                continue
+
+            
+        
+        stdscr.clear()
+        snake.draw(stdscr)
+        stdscr.border(0)
+        snake.printApple(stdscr, applex, appley) 
+        stdscr.refresh()
+        
 
 if __name__ == '__main__':
    wrapper(main)
