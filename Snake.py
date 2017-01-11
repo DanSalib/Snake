@@ -80,7 +80,7 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
         if newPos.x < 1 or newPos.x > self.WIDTH - 2:
             raise GameLost('You hit the border')
         
-        if newPos.y < 1 or newPos.y >= self.LENGTH - 2:
+        if newPos.y < 1 or newPos.y >= self.LENGTH - 1:
             raise GameLost('You hit the border')
 
         self.posArr.insert(0, newPos)
