@@ -58,8 +58,6 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
         # Check for two things
         #   1. Did the snake hit itself
         #   2. Did the snake it one of the borders?
-        
-        # Use array.index
         head = self.posArr[0]
         if self.cdir == 'n':
             newPos = Pos(x = head.x, y = head.y - 1)
@@ -92,10 +90,6 @@ Raises a GameLost exception if the snake coils on itself or if it hits the edge
 
     def draw(self, stdscr):
         ''' Draw the snake on stdscr '''
-
-        # IMPLEMENT
-    
-        # USE
         for pos in self.posArr:
             stdscr.addstr(pos.y, pos.x, '*')
 
@@ -190,8 +184,7 @@ def main(stdscr):
 
 if __name__ == '__main__':
    wrapper(main)
-    # Wrapper does the setup and then calls main
-    # after main is done, it puts back everything as it was
+
 
         
 
