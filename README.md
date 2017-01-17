@@ -2,7 +2,7 @@
 Snake game to be played in console. Python Project
 
 Run the Snake.py file in your terminal to start the game
-Note: Resizing your terminal will affect the size of the gamme board. More bugs are apparent when the console window is too large or too small. Game works better with a smaller terminal, just make sure it is not too small.
+Note: Resizing your terminal will affect the size of the game board. More bugs are apparent when the console window is too large or too small. Game works better with a smaller terminal, just make sure it is not too small.
 
 ![snake3](https://cloud.githubusercontent.com/assets/24818991/22007171/b8a6ed78-dc3e-11e6-9828-b773cf086085.png)
 
